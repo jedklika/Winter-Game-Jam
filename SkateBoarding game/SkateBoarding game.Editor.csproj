@@ -344,6 +344,10 @@
       <Project>{72E5D047-DC7D-99BA-4963-1E44892B4A5C}</Project>
       <Name>SkateBoarding game</Name>
     </ProjectReference>
+    <ProjectReference Include="SkateBoarding game.csproj">
+      <Project>{72E5D047-DC7D-99BA-4963-1E44892B4A5C}</Project>
+      <Name>SkateBoarding game</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packages\com.unity.collab-proxy\Editor\AssemblyInfo.cs" />
