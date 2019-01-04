@@ -5,12 +5,12 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-    public float SkateSpeed = 10f;
-    public float PushSpeed = 5;
-    public float JumpHeight;
+    public float SkateSpeed = 20f;
+    public float PushSpeed = 25f;
     bool onGround = true;
     public GameObject Player;
     public float rotationSpeed;
+    public float Sensitivity = 2f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,24 +21,25 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (onGround == true)
+        {
+            transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * Time.deltaTime * Sensitivity);
+        }
         float rotation = 0f;
         transform.Translate(0, 0, SkateSpeed * Time.deltaTime);
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (onGround && Input.GetMouseButton(0))
         {
             transform.Translate(0, 0, PushSpeed * Time.deltaTime);
+            onGround = true;
         }
-        if (onGround && Input.GetKeyUp(KeyCode.Space))
+        if (onGround && Input.GetKeyDown(KeyCode.Space))
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 350);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 250);
             onGround = false;
         }
-        }
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.CompareTag("Ground"))
+        else
         {
             onGround = true;
-            Debug.Log("Hit");
         }
     }
 }
