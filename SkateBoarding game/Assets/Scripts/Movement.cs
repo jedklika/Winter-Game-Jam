@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
@@ -14,19 +16,40 @@ public class Movement : MonoBehaviour
     bool inAir;
     bool onRail;
     public float MannualSpeed = 10f;
- 
+    bool GameOver = false;
+    bool Restart = false;
+    float CurrentTime = 0f;
+    float StartingTime = 120f;
+    public Text Timer;
+    public Text FinalScore;
+    public Text Trick;
+    public Text ScoreProgress;
+    public Text Replay;
+    public Text Gameover;
+    static float Score;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        Time.timeScale = 1;
+        CurrentTime = StartingTime;
+        Trick.text = "";
+        Replay.text = "";
+        Gameover.text = "";
+        Score = 0;
+       if(Score == 0)
+        {
+            FinalScore.text = "0";
+        }
+    }
+    void SetFinalScore()
+    {
+        FinalScore.text = "Score: " + Score.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * Time.deltaTime * Sensitivity);
-        float rotation = 0f;
         transform.Translate(0, 0, SkateSpeed * Time.deltaTime);
         if (onGround && Input.GetMouseButton(0))
         {
@@ -37,63 +60,124 @@ public class Movement : MonoBehaviour
         {
             this.GetComponent<Rigidbody>().AddForce(Vector3.up * 400);
             onGround = false;
+            onRail = false;
             inAir = true;
 
         }
-        if (transform.position.y >= 4.9) {
+        if (onRail && Input.GetMouseButton(1))
+        {
+            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 400);
+            onRail = false;
+            inAir = true;
+
+        }
+        if (transform.position.y >= 4.9)
+        {
             onGround = false;
             inAir = true;
         }
-        if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.Keypad6))
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        CurrentTime -= 1f * Time.deltaTime;
+        Timer.text = CurrentTime.ToString("0");
+        if (CurrentTime <= 0)
         {
-            Debug.Log("KickFlip");
+            CurrentTime = 0;
+            if (onGround)
+            {
+                Time.timeScale = 0;
+                Gameover.text = "Gameover";
+                Replay.text = "Press R To Replay";
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    SceneManager.LoadScene(0);
+                }
+            }
         }
-            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.Keypad4))
+         if (inAir && Input.GetKeyDown(KeyCode.F)&& Input.GetKey(KeyCode.D))
+        {
+            
+            Trick.text = "KickFlip";
+            Score = Score + 100;
+            SetFinalScore();
+            
+        }
+            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.A))
             {
-                Debug.Log("HeelFlip");
-            }
-            if (onGround && Input.GetKey(KeyCode.Space))
+                
+                Trick.text = "HeelFlip";
+            Score = Score + 100;
+            SetFinalScore();
+        }
+            if (onGround && onRail == false && Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("Mannual");
-                transform.Translate(0, 0, -MannualSpeed * Time.deltaTime);
-            }
-            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.Keypad8))
+            
+            Trick.text = "Manual";
+            transform.Translate(0, 0, -MannualSpeed * Time.deltaTime);
+            Score = Score + 100;
+            SetFinalScore();
+        }
+            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.W))
             {
-                Debug.Log("Impossible");
-            }
-            if (inAir && Input.GetKeyDown(KeyCode.G) && Input.GetKey(KeyCode.Keypad4))
+                
+                Trick.text = "Impossible";
+            Score = Score + 100;
+            SetFinalScore();
+        }
+            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.A))
             {
-                Debug.Log("Melon");
-            }
-            if (inAir && Input.GetKeyDown(KeyCode.G) && Input.GetKey(KeyCode.Keypad2))
+                
+            Trick.text = "Melon";
+            Score = Score + 100;
+            SetFinalScore();
+        }
+            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.S))
             {
-                Debug.Log("TailGrab");
-            }
-            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.Keypad2))
+                
+            Trick.text = "TailGrab";
+            Score = Score + 100;
+            SetFinalScore();
+        }
+            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.S))
             {
-                Debug.Log("Pop It shove it");
-            }
-            if (inAir && Input.GetKeyDown(KeyCode.G) && Input.GetKey(KeyCode.Keypad6))
+                
+            Trick.text = "Pop It Shove It";
+            Score = Score + 100;
+            SetFinalScore();
+        }
+            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.D))
             {
-                Debug.Log("indy");
-            }
-            if (inAir && Input.GetKeyDown(KeyCode.G) && Input.GetKey(KeyCode.Keypad8))
+                
+            Trick.text = "Indy";
+            Score = Score + 100;
+            SetFinalScore();
+
+        }
+            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.W))
             {
-                Debug.Log("Nosegrab");
-            }
-            if (onRail && Input.GetKeyDown(KeyCode.G))
-            {
-                Debug.Log("crooked");
-            }
+                
+            Trick.text = "NoseGrab";
+            Score = Score + 100;
+            SetFinalScore();
+        }
             if (onRail && Input.GetKeyDown(KeyCode.F))
             {
-                Debug.Log("Smith");
-            }
-            if (onRail && Input.GetKey(KeyCode.Space))
+                
+            Trick.text = "Crooked";
+            Score = Score + 100;
+            SetFinalScore();
+        }
+            if (onRail && Input.GetKeyDown(KeyCode.C))
             {
-                Debug.Log("50-50");
-            }
+                
+            Trick.text = "Smith";
+            Score = Score + 100;
+            SetFinalScore();
+        }
 
+   
         }
         void OnCollisionEnter(Collision other)
         {
@@ -102,14 +186,17 @@ public class Movement : MonoBehaviour
                 onGround = true;
                 inAir = false;
                 onRail = false;
+            Trick.text = "";
                 
             }
             if (other.gameObject.CompareTag("Rail"))
             {
-                onGround = true;
+                onGround = false;
                 inAir = false;
                 onRail = true;
-                Debug.Log("Grind");
-            }
+                Trick.text = "50-50";
+                Score = Score + 100;
+                SetFinalScore();
+        }
         }
     }
