@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Rail
   - Danger
+  - Wall
   layers:
   - Default
   - TransparentFX

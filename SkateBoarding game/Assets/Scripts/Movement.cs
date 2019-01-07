@@ -27,6 +27,8 @@ public class Movement : MonoBehaviour
     public Text Replay;
     public Text Gameover;
     static float Score;
+    public Transform RespawnPonit;
+    bool Wipeout = false;
 
     // Start is called before the first frame update
     void Start()
@@ -37,9 +39,13 @@ public class Movement : MonoBehaviour
         Replay.text = "";
         Gameover.text = "";
         Score = 0;
-       if(Score == 0)
+        if (Score == 0)
         {
             FinalScore.text = "0";
+        }
+        if(Wipeout == transform)
+        {
+            Score = 0;
         }
     }
     void SetFinalScore()
@@ -54,7 +60,6 @@ public class Movement : MonoBehaviour
         if (onGround && Input.GetMouseButton(0))
         {
             transform.Translate(0, 0, PushSpeed * Time.deltaTime);
-
         }
         if (onGround && Input.GetMouseButton(1))
         {
@@ -66,10 +71,9 @@ public class Movement : MonoBehaviour
         }
         if (onRail && Input.GetMouseButton(1))
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 400);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 150);
             onRail = false;
             inAir = true;
-
         }
         if (transform.position.y >= 4.9)
         {
@@ -96,107 +100,283 @@ public class Movement : MonoBehaviour
                 }
             }
         }
-         if (inAir && Input.GetKeyDown(KeyCode.F)&& Input.GetKey(KeyCode.D))
+        if (inAir && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.D))
         {
-            
+
             Trick.text = "KickFlip";
-            Score = Score + 100;
+            Score = Score + 10;
             SetFinalScore();
-            
+
         }
-            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.A))
+        else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.D))
+        {
+            Wipeout = true;
+            if (Wipeout == true)
             {
-                
-                Trick.text = "HeelFlip";
-            Score = Score + 100;
+                FinalScore.text = "0";
+                Score = 0f;
+            }
+        }
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.D))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+
+            }
+        }
+        if (inAir && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.A))
+        {
+
+            Trick.text = "HeelFlip";
+            Score = Score + 10;
             SetFinalScore();
+
         }
-            if (onGround && onRail == false && Input.GetKeyDown(KeyCode.Space))
+        else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.A))
+        {
+            Wipeout = true;
+            if (Wipeout == true)
             {
-            
-            Trick.text = "Manual";
-            transform.Translate(0, 0, -MannualSpeed * Time.deltaTime);
-            Score = Score + 100;
-            SetFinalScore();
+                FinalScore.text = "0";
+                Score = 0f;
+            }
         }
-            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.W))
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.A))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
             {
-                
+                FinalScore.text = "0";
+                Score = 0f;
+
+            }
+        }
+            //if (onGround && onRail == false && Input.GetKey(KeyCode.Space))
+            {
+                //Trick.text = "Manual";
+                //transform.Translate(0, 0, MannualSpeed *- Time.deltaTime);
+                //Score = Score + 1;
+                //SetFinalScore();
+            }
+            if (inAir && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.W))
+            {
+
                 Trick.text = "Impossible";
-            Score = Score + 100;
-            SetFinalScore();
-        }
-            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.A))
+                Score = Score + 10;
+                SetFinalScore();
+            }
+            else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.W))
             {
-                
-            Trick.text = "Melon";
-            Score = Score + 100;
-            SetFinalScore();
-        }
-            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.S))
+                Wipeout = true;
+                if (Wipeout == true)
+                {
+                    FinalScore.text = "0";
+                    Score = 0f;
+                }
+            }
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.W))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
             {
-                
-            Trick.text = "TailGrab";
-            Score = Score + 100;
-            SetFinalScore();
-        }
-            if (inAir && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.S))
-            {
-                
-            Trick.text = "Pop It Shove It";
-            Score = Score + 100;
-            SetFinalScore();
-        }
-            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.D))
-            {
-                
-            Trick.text = "Indy";
-            Score = Score + 100;
-            SetFinalScore();
+                FinalScore.text = "0";
+                Score = 0f;
 
+            }
         }
-            if (inAir && Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.W))
+        if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
             {
-                
-            Trick.text = "NoseGrab";
-            Score = Score + 100;
-            SetFinalScore();
-        }
-            if (onRail && Input.GetKeyDown(KeyCode.F))
-            {
-                
-            Trick.text = "Crooked";
-            Score = Score + 100;
-            SetFinalScore();
-        }
-            if (onRail && Input.GetKeyDown(KeyCode.C))
-            {
-                
-            Trick.text = "Smith";
-            Score = Score + 100;
-            SetFinalScore();
-        }
 
-   
+                Trick.text = "Melon";
+                Score = Score + 10;
+                SetFinalScore();
+            }
+            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
+            {
+                Wipeout = true;
+                if (Wipeout == true)
+                {
+                    FinalScore.text = "0";
+                    Score = 0f;
+                }
+            }
+            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
+            {
+                Wipeout = true;
+                if (Wipeout == true)
+                {
+                    FinalScore.text = "0";
+                    Score = 0f;
+                }
+            }
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+
+            }
+        }
+        if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.S))
+            {
+
+                Trick.text = "TailGrab";
+                Score = Score + 10;
+                SetFinalScore();
+            }
+            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.S))
+            {
+                Wipeout = true;
+                if (Wipeout == true)
+                {
+                    FinalScore.text = "0";
+                    Score = 0f;
+                }
+            }
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.S))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+
+            }
+        }
+        if (inAir && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.S))
+            {
+
+                Trick.text = "Pop It Shove It";
+                Score = Score + 10;
+                SetFinalScore();
+            }
+            else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.S))
+            {
+                Wipeout = true;
+                if (Wipeout == true)
+                {
+                    FinalScore.text = "0";
+                    Score = 0f;
+                }
+            }
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.S))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+
+            }
+        }
+        if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.D))
+            {
+
+                Trick.text = "Indy";
+                Score = Score + 10;
+                SetFinalScore();
+
+            }
+            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.D))
+            {
+                Wipeout = true;
+                if (Wipeout == true)
+                {
+                    FinalScore.text = "0";
+                    Score = 0f;
+                }
+            }
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.D))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+
+            }
+        }
+        if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
+            {
+
+                Trick.text = "NoseGrab";
+                Score = Score + 10;
+                SetFinalScore();
+            }
+            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
+            {
+                Wipeout = true;
+                if (Wipeout == true)
+                {
+                    FinalScore.text = "0";
+                    Score = 0f;
+                }
+            }
+        else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
+        {
+            Wipeout = true;
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+
+            }
+        }
+        if (onRail && Input.GetKey(KeyCode.F))
+            {
+
+                Trick.text = "Crooked";
+                Score = Score + 5;
+                SetFinalScore();
+            }
+            if (onRail && Input.GetKey(KeyCode.C))
+            {
+
+                Trick.text = "Smith";
+                Score = Score + 5;
+                SetFinalScore();
+            }
         }
         void OnCollisionEnter(Collision other)
         {
             if (other.gameObject.CompareTag("Ground"))
             {
+
                 onGround = true;
                 inAir = false;
                 onRail = false;
-            Trick.text = "";
-                
+                Trick.text = "";
+
             }
+            if (other.gameObject.CompareTag("Wall"))
+            {
+                Player.transform.position = RespawnPonit.transform.position;
+            }
+        }
+        void OnCollisionStay(Collision other)
+        {
             if (other.gameObject.CompareTag("Rail"))
             {
                 onGround = false;
                 inAir = false;
                 onRail = true;
                 Trick.text = "50-50";
-                Score = Score + 100;
+                Score = Score + 1;
                 SetFinalScore();
-        }
+            }
+
         }
     }
