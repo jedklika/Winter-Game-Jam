@@ -26,6 +26,7 @@ public class Movement : MonoBehaviour
     public Text ScoreProgress;
     public Text Replay;
     public Text Gameover;
+    public Text Fail;
     static float Score;
     public Transform RespawnPonit;
     bool Wipeout = false;
@@ -38,6 +39,7 @@ public class Movement : MonoBehaviour
         Trick.text = "";
         Replay.text = "";
         Gameover.text = "";
+        Fail.text = "";
         Score = 0;
         if (Score == 0)
         {
@@ -55,6 +57,7 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
+        Fail.text = "";
         transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * Time.deltaTime * Sensitivity);
         transform.Translate(0, 0, SkateSpeed * Time.deltaTime);
         if (onGround && Input.GetMouseButton(0))
@@ -111,6 +114,8 @@ public class Movement : MonoBehaviour
         else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.D))
         {
             Wipeout = true;
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
                 FinalScore.text = "0";
@@ -120,12 +125,13 @@ public class Movement : MonoBehaviour
         else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.D))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
                 FinalScore.text = "0";
                 Score = 0f;
-
+              
             }
         }
         if (inAir && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.A))
@@ -139,15 +145,19 @@ public class Movement : MonoBehaviour
         else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.A))
         {
             Wipeout = true;
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
                 FinalScore.text = "0";
                 Score = 0f;
+                
             }
         }
         else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.A))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
@@ -173,21 +183,23 @@ public class Movement : MonoBehaviour
             else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.W))
             {
                 Wipeout = true;
-                if (Wipeout == true)
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
                 {
                     FinalScore.text = "0";
                     Score = 0f;
-                }
+            }
             }
         else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.W))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
                 FinalScore.text = "0";
                 Score = 0f;
-
             }
         }
         if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
@@ -200,24 +212,29 @@ public class Movement : MonoBehaviour
             else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
             {
                 Wipeout = true;
-                if (Wipeout == true)
+                Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
                 {
                     FinalScore.text = "0";
                     Score = 0f;
-                }
+            }
             }
             else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
             {
                 Wipeout = true;
-                if (Wipeout == true)
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
                 {
                     FinalScore.text = "0";
                     Score = 0f;
-                }
+            }
             }
         else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
@@ -236,15 +253,19 @@ public class Movement : MonoBehaviour
             else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.S))
             {
                 Wipeout = true;
-                if (Wipeout == true)
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
                 {
                     FinalScore.text = "0";
                     Score = 0f;
+                    
                 }
             }
         else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.S))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
@@ -263,7 +284,9 @@ public class Movement : MonoBehaviour
             else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.S))
             {
                 Wipeout = true;
-                if (Wipeout == true)
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
                 {
                     FinalScore.text = "0";
                     Score = 0f;
@@ -272,12 +295,12 @@ public class Movement : MonoBehaviour
         else if (onRail && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.S))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
                 FinalScore.text = "0";
                 Score = 0f;
-
             }
         }
         if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.D))
@@ -291,21 +314,23 @@ public class Movement : MonoBehaviour
             else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.D))
             {
                 Wipeout = true;
-                if (Wipeout == true)
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
                 {
                     FinalScore.text = "0";
                     Score = 0f;
-                }
+            }
             }
         else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.D))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
                 FinalScore.text = "0";
                 Score = 0f;
-
             }
         }
         if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
@@ -318,21 +343,25 @@ public class Movement : MonoBehaviour
             else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
             {
                 Wipeout = true;
-                if (Wipeout == true)
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
                 {
                     FinalScore.text = "0";
                     Score = 0f;
-                }
+                
+            }
             }
         else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
         {
             Wipeout = true;
+            Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
             {
                 FinalScore.text = "0";
                 Score = 0f;
-
+                
             }
         }
         if (onRail && Input.GetKey(KeyCode.F))
@@ -359,12 +388,17 @@ public class Movement : MonoBehaviour
                 inAir = false;
                 onRail = false;
                 Trick.text = "";
+            Fail.text = "";
 
             }
             if (other.gameObject.CompareTag("Wall"))
             {
-                Player.transform.position = RespawnPonit.transform.position;
-            }
+            Fail.text = "Get Back";
+            
+            Player.transform.position = RespawnPonit.transform.position;
+                
+
+        }
         }
         void OnCollisionStay(Collision other)
         {

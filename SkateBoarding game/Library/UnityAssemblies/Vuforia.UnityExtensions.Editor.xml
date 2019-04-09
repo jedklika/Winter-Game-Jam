@@ -4878,6 +4878,21 @@
             Entry name exceeds the maximum length
             </exception>
     </member>
+    <member name="T:Vuforia.EditorClasses.ModelRecoEditor">
+      <summary>
+            Editor for the ModelRecoBehaviour
+            </summary>
+    </member>
+    <member name="M:Vuforia.EditorClasses.ModelRecoEditor.OnInspectorGUI">
+      <summary>
+            Draws a custom UI for the model reco behaviour inspector
+            </summary>
+    </member>
+    <member name="M:Vuforia.EditorClasses.ModelRecoEditor.OnSceneGUI">
+      <summary>
+            Renders a label to visualize the ModelRecoBehaviour
+            </summary>
+    </member>
     <member name="T:Vuforia.EditorClasses.ModelTargetEditor">
       <summary>
             Editor class for ModelTargetBehaviours
@@ -4941,6 +4956,11 @@
     <member name="P:Vuforia.EditorClasses.SerializedModelTarget.AspectRatioXZ">
       <summary>
             Aspect ratio length/height
+            </summary>
+    </member>
+    <member name="P:Vuforia.EditorClasses.SerializedModelTarget.SelectedGuideView">
+      <summary>
+            Guide view name which has been selected in editor
             </summary>
     </member>
     <member name="P:Vuforia.EditorClasses.SerializedModelTarget.ShowBoundingBox">
@@ -5243,7 +5263,7 @@
     <member name="M:Vuforia.EditorClasses.VuforiaHelpMenu.BrowseVuforiaHelp">
       <summary>
             Method opens up a browser Window with the specified URL.
-            This method is called when "Vuforia Documentation" is chosen from the
+            This method is called when "Vuforia Engine Documentation" is chosen from the
             Unity "Help" menu.
             </summary>
     </member>
