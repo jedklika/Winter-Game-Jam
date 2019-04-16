@@ -8,6 +8,7 @@ TagManager:
   - Rail
   - Danger
   - Wall
+  - HalfPipe
   layers:
   - Default
   - TransparentFX

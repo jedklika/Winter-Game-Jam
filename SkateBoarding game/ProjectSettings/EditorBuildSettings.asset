@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/SkatePark.unity
+    guid: 7540f6772998ba24687977763e6c20c6
   m_configObjects: {}
