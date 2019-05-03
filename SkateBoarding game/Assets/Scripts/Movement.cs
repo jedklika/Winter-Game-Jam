@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Movement : MonoBehaviour
 {
 
-    public float SkateSpeed = 250f;
+    public float SkateSpeed = 100f;
     public float PushSpeed = 500f;
     bool onGround = true;
     public GameObject Player;
@@ -34,6 +34,8 @@ public class Movement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 normalizeDirection;
     Vector3 pos;
+    bool inTrick = false;
+    float moveInput;
 
     // Start is called before the first frame update
     void Start()
@@ -62,29 +64,44 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            rb.AddForce(Vector3.right * 50f);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            rb.AddForce(Vector3.left * 50f);
+        }
         Fail.text = "";
-        if (Input.GetKey(KeyCode.UpArrow))
-        { rb.AddForce(Vector3.forward * SkateSpeed * Time.deltaTime); }
-        if (Input.GetKey(KeyCode.RightArrow))
+        moveInput = Input.GetAxis("Horizontal");
+        rb.AddRelativeTorque(Vector3.up * moveInput * 20 * Time.deltaTime, ForceMode.VelocityChange);
+        rb.AddRelativeForce(Vector3.forward * SkateSpeed * Time.deltaTime, ForceMode.Acceleration);
+        Vector3 tempvel = rb.velocity;
+        tempvel.y = 0;
+        tempvel = Vector3.ClampMagnitude(tempvel, SkateSpeed);
+        tempvel.y = rb.velocity.y;
+        rb.velocity = tempvel;
+        if (onGround && Input.GetButton("R2"))
         {
-            rb.AddForce(Vector3.right * SkateSpeed * Time.deltaTime);
+            moveInput = Input.GetAxis("Horizontal");
+            rb.AddRelativeTorque(Vector3.up * moveInput * 30 * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddRelativeForce(Vector3.forward * SkateSpeed * Time.deltaTime, ForceMode.Acceleration);
+            tempvel.y = 0;
+            tempvel = Vector3.ClampMagnitude(tempvel, SkateSpeed);
+            tempvel.y = rb.velocity.y;
+            rb.velocity = tempvel;
         }
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if(onGround && Input.GetButtonDown("L2"))
         {
-            Debug.Log("Move");
-            rb.AddForce(Vector3.left * SkateSpeed * Time.deltaTime);
-            Debug.Log("Go");
+            moveInput = Input.GetAxis("Horizontal");
+            rb.AddRelativeTorque(Vector3.up * moveInput * 1, ForceMode.VelocityChange);
+            rb.AddRelativeForce(Vector3.forward * 0, ForceMode.Acceleration);
+            tempvel.y = 0;
+            tempvel = Vector3.ClampMagnitude(tempvel, SkateSpeed);
+            tempvel.y = rb.velocity.y;
+            rb.velocity = tempvel;
         }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            rb.AddForce(Vector3.back * SkateSpeed * Time.deltaTime);
-        }
-        Debug.Log("Move");
-        if (onGround && Input.GetMouseButton(0))
-        {
-            rb.AddForce(Vector3.forward * PushSpeed * Time.deltaTime);
-        }
-        if (onGround && Input.GetKeyDown(KeyCode.Space))
+        if (onGround && Input.GetButtonDown("R3"))
         {
            rb.AddForce(Vector3.up * 400);
             onGround = false;
@@ -92,9 +109,9 @@ public class Movement : MonoBehaviour
             inAir = true;
 
         }
-        if (onRail && Input.GetKeyDown(KeyCode.Space))
+        if (onRail && Input.GetButtonDown("R3"))
         {
-            rb.AddForce(Vector3.up * 150);
+            rb.AddForce(Vector3.up * 250);
             onRail = false;
             inAir = true;
         }
@@ -103,7 +120,7 @@ public class Movement : MonoBehaviour
             onGround = false;
             inAir = true;
         }
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetButtonDown("Share"))
         {
             SceneManager.LoadScene(0);
         }
@@ -120,21 +137,26 @@ public class Movement : MonoBehaviour
             {
                 Time.timeScale = 0;
                 Gameover.text = "Gameover";
-                Replay.text = "Press R To Replay";
-                if (Input.GetKeyDown(KeyCode.R))
+                Replay.text = "Press Share To Replay";
+                if (Input.GetButtonDown("Share"))
                 {
                     SceneManager.LoadScene(0);
                 }
             }
         }
-        if (inAir && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.F))
+        if (inAir && Input.GetButton("Circle") && Input.GetButton("L1"))
         {
 
             Trick.text = "KickFlip";
             Score = Score + 10;
             SetFinalScore();
+            inTrick = true; }
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
         }
-        else if (onGround && inAir == false && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.F))
+        if (onGround && Input.GetButton("Circle") && Input.GetButton("L1"))
         {
             Wipeout = true;
             Fail.text = "Fail";
@@ -143,17 +165,25 @@ public class Movement : MonoBehaviour
             {
                 FinalScore.text = "0";
                 Score = 0f;
+                Wipeout = false;
+                inTrick = false;
             }
         }
-        if (inAir && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.F))
+        if (inAir && Input.GetButton("Square") && Input.GetButton("L1"))
         {
 
             Trick.text = "HeelFlip";
             Score = Score + 10;
             SetFinalScore();
-
+            inTrick = true;
         }
-        else if (onRail && inAir == false && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.F))
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
+        }
+
+        else if (onRail && Input.GetButton("Square") && Input.GetButton("L1"))
         {
             Wipeout = true;
             Fail.text = "Fail";
@@ -162,42 +192,70 @@ public class Movement : MonoBehaviour
             {
                 FinalScore.text = "0";
                 Score = 0f;
-
+                inTrick = false;
+                Wipeout = false;
             }
         }
-            //if (onGround && onRail == false && Input.GetKey(KeyCode.Space))
+        else if (onGround && Input.GetButton("Square") && Input.GetButton("L1"))
+        {
+            Wipeout = true;
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
             {
+                FinalScore.text = "0";
+                Score = 0f;
+                inTrick = false;
+                Wipeout = false;
+            }
+        }
+        //if (onGround && onRail == false && Input.GetKey(KeyCode.Space))
+        {
                 //Trick.text = "Manual";
                 //transform.Translate(0, 0, MannualSpeed *- Time.deltaTime);
                 //Score = Score + 1;
                 //SetFinalScore();
             }
-            if (inAir && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.W))
-            {
+        if (inAir && Input.GetButton("Triangle") && Input.GetButton("L1"))
+        {
 
-                Trick.text = "Impossible";
-                Score = Score + 10;
-                SetFinalScore();
-            }
-            else if (onGround && inAir == false && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.W))
-            {
-                Wipeout = true;
+            Trick.text = "Impossible";
+            Score = Score + 10;
+            SetFinalScore();
+            inTrick = true;
+        }
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
+        }
+        else if (onGround && Input.GetButton("Triangle") && Input.GetButton("L1"))
+        {
+            Wipeout = true;
             Fail.text = "Fail";
             Player.transform.position = RespawnPonit.transform.position;
             if (Wipeout == true)
-                {
-                    FinalScore.text = "0";
-                    Score = 0f;
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+                inTrick = false;
+                Wipeout = false;
             }
-            }
-        if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
+        }
+        if (inAir && Input.GetButton("R1") && Input.GetButton("Square"))
             {
 
                 Trick.text = "Melon";
                 Score = Score + 10;
                 SetFinalScore();
-            }
-            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A))
+            inTrick = true;
+        }
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
+        }
+        else if (onGround && Input.GetButton("R1") && Input.GetButton("Square"))
             {
                 Wipeout = true;
                 Fail.text = "Fail";
@@ -206,15 +264,23 @@ public class Movement : MonoBehaviour
                 {
                     FinalScore.text = "0";
                     Score = 0f;
+                inTrick = false;
+                Wipeout = false;
             }
             }
-        if (inAir && Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.C))
+        if (inAir && Input.GetButton("R1") && Input.GetButton("X"))
             {
                 Trick.text = "TailGrab";
                 Score = Score + 10;
                 SetFinalScore();
-            }
-        else if (onRail && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.S))
+            inTrick = true;
+        }
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
+        }
+        else if (onRail && Input.GetButton("R1") && Input.GetButton("X"))
         {
             Wipeout = true;
             Fail.text = "Fail";
@@ -223,16 +289,36 @@ public class Movement : MonoBehaviour
             {
                 FinalScore.text = "0";
                 Score = 0f;
-
+                inTrick = false;
+                Wipeout = false;
             }
         }
-        if (inAir && Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.F))
+        else if (onGround && Input.GetButton("R1") && Input.GetButton("X"))
+        {
+            Wipeout = true;
+            Fail.text = "Fail";
+            Player.transform.position = RespawnPonit.transform.position;
+            if (Wipeout == true)
+            {
+                FinalScore.text = "0";
+                Score = 0f;
+                inTrick = false;
+                Wipeout = false;
+            }
+        }
+        if (inAir && Input.GetButton("X") && Input.GetButton("L1"))
             {
             Trick.text = "Pop It Shove It";
                 Score = Score + 10;
                 SetFinalScore();
-            }
-            else if (onGround && inAir == false && Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.S))
+            inTrick = true;
+        }
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
+        }
+        else if (onGround && Input.GetButton("X") && Input.GetButton("L1"))
             {
                 Wipeout = true;
             Fail.text = "Fail";
@@ -241,16 +327,23 @@ public class Movement : MonoBehaviour
                 {
                     FinalScore.text = "0";
                     Score = 0f;
-                }
+                inTrick = false;
+                Wipeout = false;
             }
-        if (inAir && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.C))
+            }
+        if (inAir && Input.GetButton("R1") && Input.GetButton("Circle"))
             {
                 Trick.text = "Indy";
                 Score = Score + 10;
                 SetFinalScore();
-
-            }
-            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.D))
+            inTrick = true;
+        }
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
+        }
+        else if (onGround && Input.GetButton("R1") && Input.GetButton("Circle"))
             {
                 Wipeout = true;
             Fail.text = "Fail";
@@ -259,17 +352,25 @@ public class Movement : MonoBehaviour
                 {
                     FinalScore.text = "0";
                     Score = 0f;
+                inTrick = false;
+                Wipeout = false;
             }
             }
 
-        if (inAir && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
+        if (inAir && Input.GetButton("R1") && Input.GetButton("Triangle"))
             {
 
                 Trick.text = "NoseGrab";
                 Score = Score + 10;
                 SetFinalScore();
-            }
-            else if (onGround && inAir == false && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.W))
+            inTrick = true;
+        }
+        else if (inTrick = false && inAir)
+        {
+            Wipeout = false;
+            inTrick = false;
+        }
+        else if (onGround && Input.GetButton("R1") && Input.GetButton("Triangle"))
             {
                 Wipeout = true;
             Fail.text = "Fail";
@@ -278,22 +379,24 @@ public class Movement : MonoBehaviour
                 {
                     FinalScore.text = "0";
                     Score = 0f;
-                
+                inTrick = false;
             }
             }
-        if (onRail && Input.GetKey(KeyCode.F))
+        if (onRail && Input.GetButton("R1"))
             {
 
                 Trick.text = "Crooked";
                 Score = Score + 5;
                 SetFinalScore();
+            inTrick = true;
             }
-            if (onRail && Input.GetKey(KeyCode.C))
+            if (onRail && Input.GetButton("L1"))
             {
 
                 Trick.text = "Smith";
                 Score = Score + 5;
                 SetFinalScore();
+            inTrick = true;
             }
         }
         void OnCollisionEnter(Collision other)
@@ -313,8 +416,6 @@ public class Movement : MonoBehaviour
             Fail.text = "Get Back";
             
             Player.transform.position = RespawnPonit.transform.position;
-                
-
         }
         }
         void OnCollisionStay(Collision other)
@@ -328,6 +429,5 @@ public class Movement : MonoBehaviour
                 Score = Score + 1;
                 SetFinalScore();
             }
-
         }
     }
